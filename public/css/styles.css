@@ -6,10 +6,28 @@
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
+  background-image: url(../images/site/checkerboard.jpg);
+  background-repeat: repeat;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#wrapper {
+  max-width: 900px;
   background-color: white;
+  border: 5px solid #0066AA;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  margin: 20px;
+  padding: 0;
+  min-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
 }
 
 ul {
