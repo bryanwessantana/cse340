@@ -30,14 +30,14 @@ app.set("layout", "./layouts/layout")
 const port = process.env.PORT;
 const host = process.env.HOST;
 
+// Index route
+app.get("/", function (req, res) {
+  res.render("index", {title: "Home"})
+})
+
 /* ***********************
  * Log statement to confirm server operation
  *************************/
 app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
-})
-
-// Index route
-app.get("/", function (req, res) {
-  res.render("index", {title: "Home"})
 })
