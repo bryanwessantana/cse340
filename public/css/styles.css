@@ -235,7 +235,7 @@ footer {
   border-top: 1px solid #eee;
 }
 
-/* Media Query para telas médias (ex: tablets) */
+/* Media Query medium screens (ex: tablets) */
 @media screen and (max-width: 900px) {
     #top-header {
         padding: 10px 20px;
@@ -249,13 +249,11 @@ footer {
         padding: 20px 20px;
     }
 
-    /* Reduz o tamanho da sobreposição de texto */
     .delorean-text-overlay {
         left: 20px;
         width: 50%;
     }
 
-    /* Ajusta o container de upgrades/reviews */
     .upgrades-reviews-container {
         margin-top: 50px;
     }
@@ -277,8 +275,7 @@ footer {
     }
 }
 
-
-/* Media Query para telas pequenas (ex: smartphones) */
+/* Media Query small screens (ex: smartphones) */
 @media screen and (max-width: 650px) {
   #top-header {
     flex-direction: column;
@@ -365,3 +362,4 @@ footer {
       text-align: center;
     }
 }
+
