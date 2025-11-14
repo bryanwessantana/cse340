@@ -2,6 +2,11 @@ const invModel = require("../models/inventory-model")
 const Util = {}
 
 /* ************************
+ * Middleware to wrap async functions for error handling
+ * ************************ */
+Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
+
+/* ************************
  * Constructs the nav HTML unordered list
  ************************** */
 Util.getNav = async function (req, res, next) {
@@ -21,8 +26,6 @@ Util.getNav = async function (req, res, next) {
   list += "</ul>"
   return list
 }
-
-module.exports = Util
 
 /* **************************************
 * Build the classification view HTML
@@ -56,3 +59,47 @@ Util.buildClassificationGrid = async function(data){
   }
   return grid
 }
+
+/* **************************************
+* Build the inventory detail view HTML
+* ************************************ */
+Util.buildInventoryDetailsHTML = async function (vehicle) {
+  let detailHTML
+  if (vehicle) {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0, // Assume integer price
+    }).format(vehicle.inv_price);
+    
+    const formattedMiles = new Intl.NumberFormat('en-US').format(vehicle.inv_miles);
+
+    detailHTML = `<div id="inventory-detail-container">
+      <div class="image-section">
+        <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} ${vehicle.inv_year}">
+      </div>
+      <div class="details-section">
+        <h2 class="detail-price-heading">${vehicle.inv_make} ${vehicle.inv_model} Price</h2>
+        <p class="detail-price">${formattedPrice}</p>
+        
+        <h3 class="detail-info-heading">Vehicle Details</h3>
+        <ul class="detail-list">
+          <li><strong>Make:</strong> ${vehicle.inv_make}</li>
+          <li><strong>Model:</strong> ${vehicle.inv_model}</li>
+          <li><strong>Year:</strong> ${vehicle.inv_year}</li>
+          <li><strong>Color:</strong> ${vehicle.inv_color}</li>
+          <li><strong>Mileage:</strong> ${formattedMiles} miles</li>
+        </ul>
+
+        <h3 class="detail-description-heading">Description</h3>
+        <p class="detail-description">${vehicle.inv_description}</p>
+      </div>
+    </div>`;
+  } else {
+    detailHTML = '<p class="notice">Sorry, no vehicle information could be found.</p>';
+  }
+  return detailHTML;
+}
+
+
+module.exports = Util

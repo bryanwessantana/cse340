@@ -363,3 +363,57 @@ footer {
     }
 }
 
+/* INVENTORY DETAIL VIEW */
+#inventory-detail-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns for large screens */
+    gap: 30px;
+    align-items: flex-start;
+    margin-top: 30px;
+}
+
+#inventory-detail-container .image-section img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#inventory-detail-container .details-section {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.detail-price-heading, .detail-info-heading, .detail-description-heading {
+    color: #0066AA;
+    font-size: 1.4em;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.detail-price {
+    font-size: 2em;
+    font-weight: bold;
+    color: #e53935; /* A stand-out color for price */
+    margin-bottom: 20px;
+}
+
+.detail-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.detail-list li {
+    padding: 5px 0;
+    border-bottom: 1px dotted #ccc;
+    font-size: 1.1em;
+}
+
+.detail-description {
+    line-height: 1.6;
+    font-size: 1em;
+}
