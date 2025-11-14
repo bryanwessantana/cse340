@@ -366,7 +366,7 @@ footer {
 /* INVENTORY DETAIL VIEW */
 #inventory-detail-container {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns for large screens */
+    grid-template-columns: 1fr 1fr;
     gap: 30px;
     align-items: flex-start;
     margin-top: 30px;
@@ -386,6 +386,10 @@ footer {
     border-radius: 8px;
 }
 
+.detail-price-heading {
+    margin-top: 0;
+}
+
 .detail-price-heading, .detail-info-heading, .detail-description-heading {
     color: #0066AA;
     font-size: 1.4em;
@@ -394,11 +398,15 @@ footer {
     margin-bottom: 10px;
 }
 
+.detail-description-heading {
+    margin-top: 30px;
+}
+
 .detail-price {
-    font-size: 2em;
-    font-weight: bold;
-    color: #e53935; /* A stand-out color for price */
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    padding-bottom: 5px; 
+    border-bottom: 1px dashed #ccc;
 }
 
 .detail-list {
@@ -416,4 +424,8 @@ footer {
 .detail-description {
     line-height: 1.6;
     font-size: 1em;
+}
+
+.image-section img[src*="no-image"] {
+    background-color: #eee;
 }
