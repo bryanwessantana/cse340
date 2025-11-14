@@ -363,10 +363,72 @@ footer {
     }
 }
 
-/* INVENTORY DETAIL VIEW */
+
+/* --- INVENTORY CLASSIFICATION GRID STYLES (New/Improved) --- */
+#inv-display {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#inv-display li {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#inv-display li img {
+    width: 100%;
+    height: auto;
+    max-width: 300px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+#inv-display .namePrice {
+    width: 100%;
+    padding: 5px 0;
+}
+
+#inv-display h2 {
+    font-size: 1.2em;
+    margin: 5px 0;
+    color: #0066AA;
+}
+
+#inv-display h2 a {
+    font-weight: bold;
+}
+
+#inv-display span {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-top: 5px;
+}
+
+/* --- Media Query for Larger Screens (Classification Grid layout) --- */
+@media screen and (min-width: 651px) {
+    #inv-display {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+}
+
+/* --- INVENTORY DETAIL VIEW STYLES (Kept for Task 1) --- */
 #inventory-detail-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr; 
     gap: 30px;
     align-items: flex-start;
     margin-top: 30px;
@@ -386,10 +448,6 @@ footer {
     border-radius: 8px;
 }
 
-.detail-price-heading {
-    margin-top: 0;
-}
-
 .detail-price-heading, .detail-info-heading, .detail-description-heading {
     color: #0066AA;
     font-size: 1.4em;
@@ -398,15 +456,11 @@ footer {
     margin-bottom: 10px;
 }
 
-.detail-description-heading {
-    margin-top: 30px;
-}
-
 .detail-price {
-    margin-top: 10px;
-    margin-bottom: 30px;
-    padding-bottom: 5px; 
-    border-bottom: 1px dashed #ccc;
+    font-size: 2em;
+    font-weight: bold;
+    color: #e53935;
+    margin-bottom: 20px;
 }
 
 .detail-list {
@@ -426,6 +480,18 @@ footer {
     font-size: 1em;
 }
 
-.image-section img[src*="no-image"] {
-    background-color: #eee;
+/* Media Query small screens (for stacking the detail view) */
+@media screen and (max-width: 900px) {
+    #inventory-detail-container {
+        grid-template-columns: 1fr;
+    }
+
+    #inventory-detail-container .image-section {
+        order: 1; 
+    }
+
+    #inventory-detail-container .details-section {
+        order: 2; 
+        padding: 15px;
+    }
 }
