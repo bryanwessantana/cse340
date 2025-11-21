@@ -21,7 +21,7 @@ const flash = require('connect-flash')
 /* ***********************
  * Middleware
  * ************************/
-app.use(session({
+ app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
     pool,
@@ -33,11 +33,11 @@ app.use(session({
 }))
 
 // Express Messages Middleware
-app.use(flash())
+app.use(require('connect-flash')())
 app.use(function(req, res, next){
   res.locals.messages = require('express-messages')(req, res)
   next()
-}) 
+})
 
 // FIX: Replaced body-parser with Express's built-in methods
 app.use(express.json())
