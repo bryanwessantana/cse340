@@ -91,7 +91,7 @@ input:required:invalid, input:focus:invalid {
 }
 
 input:required:valid {
-  background-color: rgba(134, 227, 246, 0.675) !important;
+  background-color: rgba(144, 238, 144, 0.675) !important;
 }
 
 .submit, .register {
@@ -146,7 +146,7 @@ input:required:valid {
 }
 
 nav {
-  background-color: #333;
+  background-color: #545454;
   padding: 10px 40px;
 }
 
