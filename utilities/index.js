@@ -1,17 +1,10 @@
 const invModel = require("../models/inventory-model")
 const Util = {}
 
-/* ************************
- * Middleware to wrap async functions for error handling
- * ************************ */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
-/* ************************
- * Constructs the nav HTML unordered list
- ************************** */
 Util.getNav = async function (req, res, next) {
   let data = await invModel.getClassifications()
-  console.log(data)
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
   
@@ -27,16 +20,13 @@ Util.getNav = async function (req, res, next) {
   return list
 }
 
-/* **************************************
-* Build the classification view HTML
-* ************************************ */
 Util.buildClassificationGrid = async function(data){
   let grid
-  if(data.length > 0){
+  if(data && data.length > 0){
     grid = '<ul id="inv-display">'
     data.forEach(vehicle => { 
       grid += '<li>'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
+      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
       + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
       + 'details"><img src="' + vehicle.inv_thumbnail 
       +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
@@ -54,21 +44,18 @@ Util.buildClassificationGrid = async function(data){
     })
     grid += '</ul>'
   } else { 
-    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+    grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
 }
 
-/* **************************************
-* Build the inventory detail view HTML
-* ************************************ */
-Util.buildInventoryDetailsHTML = async function (vehicle) {
+Util.buildVehicleDetail = async function (vehicle) {
   let detailHTML
   if (vehicle) {
     const formattedPrice = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      maximumFractionDigits: 0, // Assume integer price
+      maximumFractionDigits: 0,
     }).format(vehicle.inv_price);
     
     const formattedMiles = new Intl.NumberFormat('en-US').format(vehicle.inv_miles);
@@ -98,6 +85,25 @@ Util.buildInventoryDetailsHTML = async function (vehicle) {
     detailHTML = '<p class="notice">Sorry, no vehicle information could be found.</p>';
   }
   return detailHTML;
+}
+
+// Renamed to match controller usage in previous fixes
+Util.buildClassificationList = async function (classification_id = null) {
+  let data = await invModel.getClassifications()
+  let list = '<select name="classification_id" id="classificationList" required>'
+  list += "<option value=''>Choose a Classification</option>"
+  data.rows.forEach((row) => {
+    list += `<option value="${row.classification_id}"`
+    if (
+      classification_id != null &&
+      row.classification_id == classification_id
+    ) {
+      list += " selected "
+    }
+    list += `>${row.classification_name}</option>`
+  })
+  list += "</select>"
+  return list
 }
 
 

@@ -8,11 +8,40 @@
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
-const inventoryRoute = require("./routes/inventoryRoute")
 const app = express()
-const static = require("./routes/static")
+const staticRoute = require("./routes/static")
 const baseController = require("./controllers/baseController")
-const Util = require("./utilities/") // Import utilities for custom error handler
+const inventoryRoute = require("./routes/inventoryRoute")
+const accountRoute = require("./routes/accountRoute")
+const utilities = require("./utilities")
+const session = require("express-session")
+const pool = require("./database/")
+const flash = require('connect-flash')
+
+/* ***********************
+ * Middleware
+ * ************************/
+app.use(session({
+  store: new (require('connect-pg-simple')(session))({
+    createTableIfMissing: true,
+    pool,
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  name: 'sessionId',
+}))
+
+// Express Messages Middleware
+app.use(flash())
+app.use(function(req, res, next){
+  res.locals.messages = require('express-messages')(req, res)
+  next()
+}) 
+
+// FIX: Replaced body-parser with Express's built-in methods
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 /* ***********************
  * View Engine and Templates
@@ -24,50 +53,50 @@ app.set("layout", "./layouts/layout")
 /* ***********************
  * Routes
  *************************/
-app.use(static)
-app.use("/inv", inventoryRoute)
-
+app.use(staticRoute) // Renamed variable 'static' to 'staticRoute' to avoid naming conflicts with static keyword
 // Index route
-app.get("/", baseController.buildHome)
+app.get("/", utilities.handleErrors(baseController.buildHome))
+// Inventory routes
+app.use("/inv", inventoryRoute)
+// Account routes
+app.use("/account", accountRoute)
 
-// Handle 404 errors (Must be placed after all routes)
+
+/* ***********************
+ * File Not Found Route - must be last route in list
+ * Place after all routes
+ *************************/
 app.use(async (req, res, next) => {
-  next({status: 404, message: 'Sorry, we could not find that route.'})
+  next({ status: 404, message: `Sorry, we appear to have lost that page.` })
 })
 
 /* ***********************
- * Express Error Handler (Task 2)
- * Custom Error Middleware
- * ************************/
+ * Express Error Handler
+ * Place after all other middleware
+ *************************/
 app.use(async (err, req, res, next) => {
-  // Certifique-se de que a navegação é construída para a view de erro
-  let nav = await Util.getNav() 
-  console.error(`Error Handler: ${err.message}`)
+  let nav = await utilities.getNav()
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
   
-  // Define status padrão 500 se não for fornecido
-  let status = err.status || 500 
-  let message = err.message || 'Oh no! There was a crash. Maybe try a different route?'
-
-  // Tratamento específico para 404
-  if (status === 404) {
-    message = err.message || 'Sorry, we could not find that route.'
+  let message
+  if(err.status == 404){ 
+    message = err.message
+  } else {
+    message = 'Oh no! There was a crash. Maybe try a different route?'
   }
 
-  res.status(status).render("errors/error", {
-    title: status === 404 ? "404 Not Found" : "Server Error",
-    message: message,
-    nav,
-    status: status
+  res.render("errors/error", {
+    title: err.status || 'Server Error',
+    message,
+    nav
   })
 })
 
-
 /* ***********************
  * Local Server Information
- * Values from .env (environment) file
  *************************/
-const port = process.env.PORT;
-const host = process.env.HOST;
+const port = process.env.PORT
+const host = process.env.HOST
 
 /* ***********************
  * Log statement to confirm server operation

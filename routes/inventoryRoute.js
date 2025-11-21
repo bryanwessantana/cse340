@@ -1,15 +1,40 @@
-// Needed Resources
 const express = require("express")
-const router = new express.Router() 
+const router = express.Router()
 const invController = require("../controllers/invController")
+const { handleErrors } = require("../utilities")
+const invValidate = require("../utilities/inv-validation")
 
-// Route to build inventory by classification view
-router.get("/type/:classificationId", invController.buildByClassificationId);
+const bodyParser = express.urlencoded({ extended: true, limit: '5kb' });
 
-// Route to build inventory detail view (Task 1)
-router.get("/detail/:invId", invController.buildByInventoryId);
+router.get("/type/:classificationId", handleErrors(invController.buildByClassificationId));
 
-// Route to intentionally trigger a 500 error (Task 3)
-router.get("/error", invController.throwError);
+router.get("/detail/:invId", handleErrors(invController.buildByInvId));
 
-module.exports = router;
+router.get("/", handleErrors(invController.buildManagementView));
+
+router.get("/add-classification",
+  handleErrors(invController.buildAddClassification)
+)
+
+router.get(
+  "/add-vehicle",
+  handleErrors(invController.buildAddVehicle)
+)
+
+router.post(
+  "/add-classification",
+  bodyParser,
+  invValidate.classificationRules(),
+  invValidate.checkClassData,
+  handleErrors(invController.addClassification)
+)
+
+router.post(
+  "/add-vehicle",
+  bodyParser,
+  invValidate.inventoryRules(),
+  invValidate.checkInventoryData,
+  handleErrors(invController.addInventory)
+)
+
+module.exports = router
