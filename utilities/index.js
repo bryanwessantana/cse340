@@ -54,13 +54,15 @@ Util.buildClassificationGrid = async function(data){
 Util.buildVehicleDetail = async function (vehicle) {
   let detailHTML
   if (vehicle) {
+    const priceValue = vehicle.inv_price ? vehicle.inv_price : 0;
     const formattedPrice = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0,
-    }).format(vehicle.inv_price);
+    }).format(priceValue);
     
-    const formattedMiles = new Intl.NumberFormat('en-US').format(vehicle.inv_miles);
+    const milesValue = vehicle.inv_miles ? vehicle.inv_miles : 0;
+    const formattedMiles = new Intl.NumberFormat('en-US').format(milesValue);
 
     detailHTML = `<div id="inventory-detail-container">
       <div class="image-section">
