@@ -7,6 +7,10 @@
   box-sizing: border-box;
 }
 
+/* ================================================= */
+/* BASE & GLOBAL STYLES */
+/* ================================================= */
+
 #top-header {
   display: flex;
   justify-content: space-between;
@@ -28,23 +32,56 @@ a, a:visited, a:active, li {
   color: inherit;
 } 
 
+/* ================================================= */
+/* NAVIGATION BAR (CORRIGIDO PARA LAYOUT) */
+/* ================================================= */
 nav {
   display: flex;
-  background-color: black;
+  background-color: #333; /* Fundo escuro */
   color: white;
   align-items: center;
   height: 50px;
   margin: 20px 0;
   font-family: 'Mulish', sans-serif;
+  padding: 10px 40px;
 }
 
 nav ul {
   display: flex;
   list-style: none;
-  justify-content: space-evenly;
+  /* FIX: Usar space-between para distribuir */
+  justify-content: space-between; 
   width: 100%;
   padding: 0;
+  margin: 0;
 }
+
+nav li {
+  /* FIX: Permite que o item cresça e remova margens que causavam overflow */
+  flex-grow: 1; 
+  flex-shrink: 1; 
+  text-align: center;
+  margin: 0; 
+  padding: 0; 
+}
+
+nav a {
+  /* FIX: Texto branco e padding horizontal zero */
+  color: white; 
+  font-weight: bold;
+  padding: 5px 0; /* Apenas padding vertical */
+  display: block;
+  font-size: 0.9em; 
+  white-space: nowrap; /* Impede que o texto quebre */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav a:hover {
+  color: #0066AA;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ================================================= */
 
 main, footer {
   margin: 3vw;
@@ -269,8 +306,9 @@ input:required:invalid, input:focus:invalid {
   background-color: rgba(255, 135, 155, 0.506);
 }
 
+/* FIX: Corrigido para a cor verde de validação */
 input:required:valid {
-  background-color: rgba(134, 227, 246, 0.675) !important;
+  background-color: rgba(144, 238, 144, 0.675) !important;
 }
 
 .notice {
