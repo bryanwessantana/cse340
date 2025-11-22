@@ -1,15 +1,15 @@
 const pool = require("../database/")
 
+/* ***************************
+ *  Get all classification data
+ * ************************** */
 async function getClassifications(){
-  try {
-    const data = await pool.query("SELECT * FROM public.classification ORDER BY classification_name")
-    return data
-  } catch (error) {
-    console.error("getClassifications error: " + error.message)
-    throw new Error("Failed to get classifications.")
-  }
+  return await pool.query("SELECT * FROM public.classification ORDER BY classification_name")
 }
 
+/* ***************************
+ *  Get all inventory items and classification_name by classification_id
+ * ************************** */
 async function getInventoryByClassificationId(classification_id) {
   try {
     const data = await pool.query(
@@ -21,8 +21,7 @@ async function getInventoryByClassificationId(classification_id) {
     )
     return data.rows
   } catch (error) {
-    console.error("getInventoryByClassificationId error: " + error.message)
-    throw new Error("Failed to get inventory by classification ID.")
+    console.error("getclassificationsbyid error " + error)
   }
 }
 
@@ -37,11 +36,13 @@ async function getInventoryByInvId(inv_id) {
     )
     return data.rows[0]
   } catch (error) {
-    console.error("getInventoryByInvId error: " + error.message)
-    throw new Error("Failed to get inventory item by ID.")
+    console.error("getInventoryByInvId error " + error)
   }
 }
 
+/* ***************************
+ *  Add classification_name to data
+ * ************************** */
 async function addClassification(classification_name) {
   try {
     const sql =
@@ -49,21 +50,26 @@ async function addClassification(classification_name) {
     const data = await pool.query(sql, [classification_name])
     return data
   } catch (error) {
-    throw error 
+    throw error
   }
 }
 
+/* ***************************
+ *  Check for existing classification
+ * ************************** */
 async function checkExistingClassification(classification_name) {
   try {
     const sql = "SELECT * FROM classification WHERE classification_name = $1"
     const className = await pool.query(sql, [classification_name])
     return className.rowCount
   } catch (error) {
-    console.error("checkExistingClassification error: " + error.message)
-    throw new Error("Failed to check existing classification.")
+    return error.message
   }
 }
 
+/* ***************************
+ *  Adding vehicle to inventory
+ * ************************** */
 async function addInventory(
   inv_make,
   inv_model,
@@ -96,9 +102,10 @@ async function addInventory(
       classification_id,
     ])
   } catch (error) {
-    throw error 
+    throw error
   }
 }
+
 
 module.exports = {
   getClassifications,

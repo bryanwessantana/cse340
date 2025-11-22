@@ -1,37 +1,45 @@
 const invModel = require("../models/inventory-model")
 const Util = {}
 
-Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
-
+/* ************************
+ * Constructs the nav HTML unordered list
+ ************************** */
 Util.getNav = async function (req, res, next) {
   let data = await invModel.getClassifications()
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
-  
   data.rows.forEach((row) => {
-    list += `<li>
-      <a href="/inv/type/${row.classification_id}" title="See our inventory of ${row.classification_name} vehicles">
-        ${row.classification_name}
-      </a>
-    </li>`
+    list += "<li>"
+    list +=
+      '<a href="/inv/type/' +
+      row.classification_id +
+      '" title="See our inventory of ' +
+      row.classification_name +
+      ' vehicles">' +
+      row.classification_name +
+      "</a>"
+    list += "</li>"
   })
-  
   list += "</ul>"
   return list
 }
 
+/* **************************************
+* Build the classification view HTML
+* ************************************ */
 Util.buildClassificationGrid = async function(data){
   let grid
-  if(data && data.length > 0){
+  if(data.length > 0){
     grid = '<ul id="inv-display">'
     data.forEach(vehicle => { 
       grid += '<li>'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
+      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
       + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
       + 'details"><img src="' + vehicle.inv_thumbnail 
-      +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
-      +' on CSE Motors" /></a>'
-      grid += '<div class="namePrice">' 
+      +'" alt="Figure of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
+      +' on CSE Motors" ></a>'
+      grid += '<div class="namePrice">'
+      grid += '<hr >'
       grid += '<h2>'
       grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
       + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
@@ -44,68 +52,80 @@ Util.buildClassificationGrid = async function(data){
     })
     grid += '</ul>'
   } else { 
-    grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
 }
 
-Util.buildVehicleDetail = async function (vehicle) {
-  let detailHTML
-  if (vehicle) {
-    const priceValue = vehicle.inv_price ? vehicle.inv_price : 0;
-    const formattedPrice = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 0,
-    }).format(priceValue);
-    
-    const milesValue = vehicle.inv_miles ? vehicle.inv_miles : 0;
-    const formattedMiles = new Intl.NumberFormat('en-US').format(milesValue);
+/* ***************************
+ *  Build HTML for a single vehicle detail
+ * ************************** */
+Util.buildVehicleDetail = function (vehicle) {
+  // Format price & miles
+  const priceFormatted = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(vehicle.inv_price)
 
-    detailHTML = `<div id="inventory-detail-container">
-      <div class="image-section">
-        <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make || 'N/A'} ${vehicle.inv_model || 'N/A'} ${vehicle.inv_year || 'N/A'}">
-      </div>
-      <div class="details-section">
-        <h2 class="detail-price-heading">${vehicle.inv_make || 'Vehicle'} ${vehicle.inv_model || 'Detail'} Price</h2>
-        <p class="detail-price">${formattedPrice}</p>
-        
-        <h3 class="detail-info-heading">Vehicle Details</h3>
-        <ul class="detail-list">
-          <li><strong>Make:</strong> ${vehicle.inv_make || 'N/A'}</li>
-          <li><strong>Model:</strong> ${vehicle.inv_model || 'N/A'}</li>
-          <li><strong>Year:</strong> ${vehicle.inv_year || 'N/A'}</li>
-          <li><strong>Color:</strong> ${vehicle.inv_color || 'N/A'}</li>
-          <li><strong>Mileage:</strong> ${formattedMiles} miles</li>
-        </ul>
+  const milesFormatted = new Intl.NumberFormat("en-US").format(vehicle.inv_miles)
 
-        <h3 class="detail-description-heading">Description</h3>
-        <p class="detail-description">${vehicle.inv_description || 'No description available.'}</p>
+  return `
+    <section class="vehicle-detail">
+      <figure class="vehicle-detail__image-wrapper">
+        <img src="${vehicle.inv_image}" alt="${vehicle.inv_color} ${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}">
+      </figure>
+      <div class="vehicle-detail__info">
+        <h2>${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}</h2>
+        <p class="vehicle-detail__price"><strong>No-Haggle Price: ${priceFormatted}</strong></p>
+        <p class="vehicle-detail__miles"><strong>Mileage:</strong> ${milesFormatted} miles</p>
+
+        <p class="vehicle-detail__color"><strong>Color:</strong> ${vehicle.inv_color}</p>
+        <p class="vehicle-detail__class">
+          <strong>Classification:</strong> ${vehicle.classification_name || ""}
+        </p>
+
+        <p class="vehicle-detail__description"><strong>Description:</strong> ${vehicle.inv_description}</p>
       </div>
-    </div>`;
-  } else {
-    detailHTML = '<p class="notice">Sorry, no vehicle information could be found.</p>';
-  }
-  return detailHTML;
+    </section>
+  `
 }
 
+/* ***************************
+ *  Build Classification List
+ * ************************** */
 Util.buildClassificationList = async function (classification_id = null) {
   let data = await invModel.getClassifications()
-  let list = '<select name="classification_id" id="classificationList" required>'
-  list += "<option value=''>Choose a Classification</option>"
+
+  let classificationList =
+    '<label for="classificationList">Classification</label>'
+  classificationList +=
+    '<select name="classification_id" id="classificationList" required>'
+  classificationList += "<option value=''>Choose a Classification</option>"
+
   data.rows.forEach((row) => {
-    list += `<option value="${row.classification_id}"`
+    classificationList += `<option value="${row.classification_id}"`
+
     if (
-      classification_id != null &&
+      classification_id !== null &&
       row.classification_id == classification_id
     ) {
-      list += " selected "
+      classificationList += " selected"
     }
-    list += `>${row.classification_name}</option>`
+
+    classificationList += `>${row.classification_name}</option>`
   })
-  list += "</select>"
-  return list
+
+  classificationList += "</select>"
+
+  return classificationList
 }
+
+/* **************************************
+* Middleware For Handling Errors
+* Wrap other function in this for
+* General Error Handling
+* ************************************ */
+Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
 
 module.exports = Util

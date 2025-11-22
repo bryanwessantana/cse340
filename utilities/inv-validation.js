@@ -1,24 +1,29 @@
-const utilities = require(".")
+const utilities = require(".")  
 const inventoryModel = require("../models/inventory-model")
 const { body, validationResult } = require("express-validator")
 
 const invValidate = {}
 
+/*  **********************************
+  *  New Classification Rules
+  * ********************************* */
+// Rules for classification input  
 invValidate.classificationRules = () => {
   return [
     body("classification_name")
       .trim()
       .matches(/^[A-Za-z]+$/)
-      .withMessage("Please provide a classification name that contains only letters.")
+      .withMessage("Please provide a classification name.")
       .custom(async (classification_name) => {
         const classificationExists = await inventoryModel.checkExistingClassification(classification_name)
         if (classificationExists) {
-          throw new Error("Classification already exists. Please add a different classification")
-        }
+            throw new Error ("Classification already exists. Please add a different classification")
+        }          
       })
   ]
 }
 
+// Check data and return form if errors 
 invValidate.checkClassData = async (req, res, next) => {
   const { classification_name } = req.body
   const errors = validationResult(req)
@@ -35,6 +40,7 @@ invValidate.checkClassData = async (req, res, next) => {
   next()
 }
 
+// Rules for new inventory (vehicle) input
 invValidate.inventoryRules = () => {
   return [
     body("inv_make")
@@ -50,7 +56,7 @@ invValidate.inventoryRules = () => {
     body("inv_year")
       .trim()
       .isInt({ min: 1900, max: 9999 })
-      .withMessage("Please provide a valid 4-digit year."),
+      .withMessage("Please provide a valid year."),
 
     body("inv_description")
       .trim()
@@ -70,12 +76,12 @@ invValidate.inventoryRules = () => {
     body("inv_price")
       .trim()
       .isFloat({ min: 1 })
-      .withMessage("Please provide a valid price (number only)."),
+      .withMessage("Please provide a valid price."),
 
     body("inv_miles")
       .trim()
       .isInt({ min: 1 })
-      .withMessage("Please provide valid miles (number only)."),
+      .withMessage("Please provide valid miles."),
 
     body("inv_color")
       .trim()
@@ -89,6 +95,7 @@ invValidate.inventoryRules = () => {
   ]
 }
 
+// Check inventory data and return form if errors
 invValidate.checkInventoryData = async (req, res, next) => {
   const errors = validationResult(req)
   const {

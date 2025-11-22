@@ -1,24 +1,26 @@
-<h1>
-  <%= title %>
-</h1>
+<% if (title) { %>
+  <h1>
+    <%= title %>
+  </h1>
+<% } else { res.redirect('/') } %>
 
 <%- messages() %>
 
 <% if (errors) { %>
   <ul class="notice">
   <% errors.array().forEach(error => { %>
-    <li><%= error.msg %></li>
-  <% }) %>
+  <li><%= error.msg %></li>
+<%  }) %>
   </ul>
 <% } %>
 
 <div class="add-inventory">
-  <form id="addInventoryForm" action="/inv/add-vehicle" method="post">
+  <form id="addInventoryForm" class="form" action="/inv/add-vehicle" method="post">
     <p>All fields are required.</p>
     <fieldset>
       <legend>&nbsp;</legend>
 
-      <label for="classificationList">Classification</label>
+
       <%- classificationList %>
 
       <label for="inv_make">Make</label>
@@ -26,7 +28,8 @@
         type="text"
         id="inv_make"
         name="inv_make"
-        required
+        required minlength="3"
+        placeholder="Min of 3 characters"
         value="<%= locals.inv_make || '' %>">
 
       <label for="inv_model">Model</label>
@@ -34,7 +37,8 @@
         type="text"
         id="inv_model"
         name="inv_model"
-        required
+        required minlength="3"
+        placeholder="Min of 3 characters"
         value="<%= locals.inv_model || '' %>">
 
       <label for="inv_description">Description</label>
@@ -42,10 +46,10 @@
         id="inv_description"
         name="inv_description"
         required
-        rows="4"><%= locals.inv_description || '' %></textarea>
+        rows="4"><%= locals.inv_description  || '' %></textarea>
         
 
-      <label for="inv_image">Image Path (e.g., /images/vehicles/yourfile.jpg)</label>
+      <label for="inv_image">Image Path</label>
       <input
         type="text"
         id="inv_image"
@@ -53,7 +57,7 @@
         required
         value="<%= locals.inv_image ? locals.inv_image: '/images/vehicles/no-image.png' %>">
 
-      <label for="inv_thumbnail">Thumbnail Path (e.g., /images/vehicles/yourfile-tn.jpg)</label>
+      <label for="inv_thumbnail">Thumbnail Path</label>
       <input
         type="text"
         id="inv_thumbnail"
@@ -69,6 +73,7 @@
         required
         min="0"
         step="0.01"
+        placeholder="Decimal or integers"
         value="<%= locals.inv_price || '' %>">
 
       <label for="inv_year">Year</label>
@@ -79,7 +84,7 @@
         required
         min="1900"
         max="2100"
-        pattern="\d{4}"
+        placeholder="4-digit year"
         value="<%= locals.inv_year || '' %>">
 
 
@@ -91,6 +96,7 @@
         required
         min="0"
         step="1"
+        placeholder="Digits only"
         value="<%= locals.inv_miles || '' %>">
 
       <label for="inv_color">Color</label>
@@ -99,7 +105,7 @@
         id="inv_color"
         name="inv_color"
         required
-        value="<%= locals.inv_color || '' %>">
+        value="<%= locals.inv_color  || '' %>">
 
       <button class="submit" type="submit">Add Vehicle</button>
     </fieldset>

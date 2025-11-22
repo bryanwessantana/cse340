@@ -1,12 +1,6 @@
 <% if (title) { %>
-<h1><%= title %></h1>
-<% } else { %>
-<h1>Server Error</h1>
-<% } %>
-
-<p class="notice">Sorry, there was a <%= status %> server error.</p>
-<% if (message) { %>
-    <p><%= message %></p>
-<% } %>
-
-<p>Please try again later.</p>
+    <h1><%= title %></h1>
+<% } else {
+    res.redirect('/')
+} %>
+<%- message %>

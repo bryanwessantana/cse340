@@ -1,18 +1,20 @@
-const utilities = require("../utilities/")
+const utilities = require("../utilities/index.js")
 const baseController = {}
 
-// Wrap the async function with Util.handleErrors
-baseController.buildHome = utilities.handleErrors(async function (req, res, next) {
-  console.log('Fetching navigation data...')
+baseController.buildHome = async function(req, res){
   const nav = await utilities.getNav()
-  res.render("index", {title: "Home", nav})
-})
-
-// Intentional error route for testing error handling
-baseController.causeError = async function (req, res, next) {
-  const error = new Error("Intentional error for testing purposes")
-  error.status = 500
-  throw error
+    // req.flash("notice", "This is a flash message.")
+    res.render("index", { title: "Home", nav })
 }
+
+/* ***************************
+ *  Intentionally trigger a 500 error
+ * ************************** */
+baseController.triggerError = async function (req, res, next) {
+  const error = new Error("Intentional server error for testing.")
+  error.status = 500
+  throw error          
+}
+
 
 module.exports = baseController

@@ -1,34 +1,45 @@
+// Needed Resources 
 const express = require("express")
-const router = express.Router()
+const router = new express.Router() 
 const invController = require("../controllers/invController")
-const { handleErrors } = require("../utilities")
+const utilities = require("../utilities")
 const invValidate = require("../utilities/inv-validation")
 
-router.get("/type/:classificationId", handleErrors(invController.buildByClassificationId));
 
-router.get("/detail/:invId", handleErrors(invController.buildByInvId));
+// Route to build inventory by classification view
+router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
 
-router.get("/", handleErrors(invController.buildManagementView));
+// Route to build single vehicle view
+router.get("/detail/:invId", utilities.handleErrors(invController.buildByInvId));
 
-router.get("/add-classification", handleErrors(invController.buildAddClassification))
+// Route to build management view
+router.get("/", invController.buildManagementView)
 
-router.get(
-  "/add-vehicle",
-  handleErrors(invController.buildAddVehicle)
+// Route to add-classification form (GET)
+router.get("/add-classification",
+  utilities.handleErrors(invController.buildAddClassification)
 )
 
+// Route to build add-inventory view
+router.get(
+  "/add-vehicle",
+  utilities.handleErrors(invController.buildAddVehicle)
+)
+
+// Route to add-classification form submission (POST)
 router.post(
   "/add-classification",
   invValidate.classificationRules(),
   invValidate.checkClassData,
-  handleErrors(invController.addClassification)
+  utilities.handleErrors(invController.addClassification)
 )
 
+// Route to add vehicle to inventory
 router.post(
   "/add-vehicle",
   invValidate.inventoryRules(),
   invValidate.checkInventoryData,
-  handleErrors(invController.addInventory)
+  utilities.handleErrors(invController.addInventory)
 )
 
 module.exports = router

@@ -1,20 +1,31 @@
-const express = require("express");
-const router = express.Router();
-const accountController = require("../controllers/accountController");
-const { handleErrors } = require("../utilities");
-const regValidate = require("../utilities/account-validation");
+/* ******************************************
+ * Needed Resources
+ *******************************************/
+const express = require("express")
+const router = new express.Router() 
+const accountController = require("../controllers/accountController")
+const utilities = require("../utilities")
+const regValidate = require("../utilities/account-validation")
 
-router.get("/login", handleErrors(accountController.buildLogin));
+/* ******************************************
+ * Deliver Login View
+ *******************************************/
+router.get("/login", utilities.handleErrors(accountController.buildLogin))
 
-router.get("/register", handleErrors(accountController.buildRegister));
+/* ******************************************
+ * Deliver Registration View
+ *******************************************/
+router.get("/register", utilities.handleErrors(accountController.buildRegister))
 
+
+/* ******************************************
+ * Process Registration
+ *******************************************/
 router.post(
   "/register",
-  express.json({ limit: '1kb' }), 
-  express.urlencoded({ extended: true, limit: '1kb' }),
   regValidate.registrationRules(),
   regValidate.checkRegData,
-  handleErrors(accountController.registerAccount)
-);
+  utilities.handleErrors(accountController.registerAccount)
+)
 
-module.exports = router;
+module.exports = router

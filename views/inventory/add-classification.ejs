@@ -1,27 +1,29 @@
-<h1>
-  <%= title %>
-</h1>
+<% if (title) { %>
+  <h1>
+    <%= title %>
+  </h1>
+<% } else { res.redirect('/') } %>
 
 <%- messages() %>
 
 <% if (errors) { %>
   <ul class="notice">
   <% errors.array().forEach(error => { %>
-    <li><%= error.msg %></li>
-  <% }) %>
+  <li><%= error.msg %></li>
+<%  }) %>
   </ul>
 <% } %>
 
 <div class="add-classification">
   <p>
-    NAME MUST BE ONE WORD AND ALPHABETIC CHARACTERS ONLY.
+    Field is required.
   </p>
-  <p>Field is required.</p>
 
-  <form id="addClassificationForm" action="/inv/add-classification" method="post">
+  <form id="addClassificationForm" class="form" action="/inv/add-classification" method="post">
     <fieldset>
       <legend>&nbsp;</legend>
       <label class="class-name" for="classification_name">Classification Name</label>
+      <p>NAME MUST BE ONE WORD AND ALPHABETIC CHARACTERS ONLY</p>
       <input
         type="text"
         id="classification_name"
