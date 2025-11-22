@@ -66,23 +66,23 @@ Util.buildVehicleDetail = async function (vehicle) {
 
     detailHTML = `<div id="inventory-detail-container">
       <div class="image-section">
-        <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} ${vehicle.inv_year}">
+        <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make || 'N/A'} ${vehicle.inv_model || 'N/A'} ${vehicle.inv_year || 'N/A'}">
       </div>
       <div class="details-section">
-        <h2 class="detail-price-heading">${vehicle.inv_make} ${vehicle.inv_model} Price</h2>
+        <h2 class="detail-price-heading">${vehicle.inv_make || 'Vehicle'} ${vehicle.inv_model || 'Detail'} Price</h2>
         <p class="detail-price">${formattedPrice}</p>
         
         <h3 class="detail-info-heading">Vehicle Details</h3>
         <ul class="detail-list">
-          <li><strong>Make:</strong> ${vehicle.inv_make}</li>
-          <li><strong>Model:</strong> ${vehicle.inv_model}</li>
-          <li><strong>Year:</strong> ${vehicle.inv_year}</li>
-          <li><strong>Color:</strong> ${vehicle.inv_color}</li>
+          <li><strong>Make:</strong> ${vehicle.inv_make || 'N/A'}</li>
+          <li><strong>Model:</strong> ${vehicle.inv_model || 'N/A'}</li>
+          <li><strong>Year:</strong> ${vehicle.inv_year || 'N/A'}</li>
+          <li><strong>Color:</strong> ${vehicle.inv_color || 'N/A'}</li>
           <li><strong>Mileage:</strong> ${formattedMiles} miles</li>
         </ul>
 
         <h3 class="detail-description-heading">Description</h3>
-        <p class="detail-description">${vehicle.inv_description}</p>
+        <p class="detail-description">${vehicle.inv_description || 'No description available.'}</p>
       </div>
     </div>`;
   } else {
@@ -91,7 +91,6 @@ Util.buildVehicleDetail = async function (vehicle) {
   return detailHTML;
 }
 
-// Renamed to match controller usage in previous fixes
 Util.buildClassificationList = async function (classification_id = null) {
   let data = await invModel.getClassifications()
   let list = '<select name="classification_id" id="classificationList" required>'
