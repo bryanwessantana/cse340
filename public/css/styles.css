@@ -191,8 +191,11 @@ figcaption a {
 }
 
 #inv-display {
-    list-style: none;
-    padding: 0;
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: center;
+  list-style: none;
+  padding: 0;
 }
 
 #inv-display li {
@@ -201,11 +204,6 @@ figcaption a {
   width: 90%;
   max-width: 220px;
   margin: 20px auto;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  height: 320px;
-  overflow: hidden;
 }
 
 #inv-display img {
@@ -223,7 +221,7 @@ figcaption a {
 }
 
 .vehicle-detail__image-wrapper {
-  width: 100%;
+  width: 40%;
   margin: 30px 0;
   background-color: var(--color-light);
   border: none;
@@ -237,8 +235,8 @@ figcaption a {
 }
 
 .vehicle-detail__info {
-  line-height: 1.5;
-  padding: var(--padding-default);
+  width: 60%;
+  padding: 0;
 }
 
 .vehicle-detail__info > * {
@@ -446,13 +444,15 @@ fieldset {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px;
+    gap: 25px;
     padding: var(--padding-default);
   }
 
   #inv-display li {
     margin: 0;
     width: 280px;
+    max-width: 300px;
+    height: 350px;
   }
 
   .namePrice {
@@ -463,6 +463,7 @@ fieldset {
     display: flex;
     gap: 30px;
     align-items: flex-start;
+    padding: 30px;
   }
 
   .vehicle-detail__image-wrapper {
@@ -473,6 +474,12 @@ fieldset {
   .vehicle-detail__info {
     width: 60%;
     padding: 0;
+  }
+
+  .vehicle-detail__price,
+  .vehicle-detail__color,
+  .vehicle-detail__description {
+    width: 100%; 
   }
 
   .vehicle-detail img {
