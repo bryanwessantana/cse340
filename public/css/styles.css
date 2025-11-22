@@ -105,7 +105,7 @@ nav a {
 }
 
 nav a:hover {
-  color: var(--color-secondary);
+  color: white;
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -196,7 +196,7 @@ figcaption a {
 }
 
 #inv-display li {
-  border: #7c7f8132 3px solid;
+  border: var(--color-border-darker) 3px solid; 
   border-radius: 5px;
   width: 90%;
   max-width: 220px;
@@ -404,7 +404,7 @@ fieldset {
   }
 
   #wrapper {
-    border: var(--color-primary) 5px solid;
+    border: var(--color-secondary) 5px solid;
     border-radius: 10px;
     background-color: var(--color-light);
     width: 90%;
@@ -452,6 +452,7 @@ fieldset {
 
   #inv-display li {
     margin: 0;
+    width: 280px;
   }
 
   .namePrice {
