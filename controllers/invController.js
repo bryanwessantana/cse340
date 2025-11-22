@@ -3,9 +3,6 @@ const Util = require("../utilities/")
 
 const invCont = {}
 
-/* ***************************
- * Build inventory by classification view
- * ************************** */
 invCont.buildByClassificationId = Util.handleErrors(async function (req, res, next) {
   const classification_id = req.params.classificationId
   const data = await invModel.getInventoryByClassificationId(classification_id)
@@ -22,12 +19,9 @@ invCont.buildByClassificationId = Util.handleErrors(async function (req, res, ne
   })
 })
 
-/* ***************************
- * Build single vehicle view
- * ************************** */
 invCont.buildByInvId = Util.handleErrors(async function (req, res, next) {
   const inv_id = req.params.invId
-  const vehicleData = await invModel.getInventoryByInvId(inv_id) // Assumed to return ONE object
+  const vehicleData = await invModel.getInventoryByInvId(inv_id)
 
   if (!vehicleData) {
     throw { status: 404, message: "Sorry, that vehicle could not be found." }
@@ -47,9 +41,6 @@ invCont.buildByInvId = Util.handleErrors(async function (req, res, next) {
   })
 })
 
-/* ***************************
- * Build inventory management view
- * ************************** */
 invCont.buildManagementView = Util.handleErrors(async function (req, res, next) {
   const nav = await Util.getNav()
   const classificationList = await Util.buildClassificationList()
@@ -62,9 +53,6 @@ invCont.buildManagementView = Util.handleErrors(async function (req, res, next) 
   })
 })
 
-/* ***************************
- * Build add-classification view
- * ************************** */
 invCont.buildAddClassification = Util.handleErrors(async function (req, res, next) {
   const nav = await Util.getNav()
   res.render("inventory/add-classification", {
@@ -75,9 +63,6 @@ invCont.buildAddClassification = Util.handleErrors(async function (req, res, nex
   })
 })
 
-/* ***************************
- * Insert new classification
- * ************************** */
 invCont.addClassification = Util.handleErrors(async function (req, res, next) {
   const { classification_name } = req.body
 
@@ -99,9 +84,6 @@ invCont.addClassification = Util.handleErrors(async function (req, res, next) {
   }
 })
 
-/* ***************************
- * Build Add New Vehicle View
- * ************************** */
 invCont.buildAddVehicle = Util.handleErrors(async function (req, res, next) {
   const nav = await Util.getNav()
   const classificationList = await Util.buildClassificationList()
@@ -113,9 +95,6 @@ invCont.buildAddVehicle = Util.handleErrors(async function (req, res, next) {
   })
 })
 
-/* ***************************
- * Add New Vehicle Into Inventory
- * ************************** */
 invCont.addInventory = Util.handleErrors(async function (req, res, next) {
   const {
     inv_make,
@@ -169,9 +148,6 @@ invCont.addInventory = Util.handleErrors(async function (req, res, next) {
   }
 })
 
-/* ***************************
- * Test 500 Error Route
- * ************************** */
 invCont.throwError = Util.handleErrors(async function (req, res, next) {
   throw new Error("Intentional 500 Error for testing.")
 })

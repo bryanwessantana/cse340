@@ -6,7 +6,6 @@
   box-sizing: border-box; 
 }
 
-/* Base Body Styles (Mobile-first) */
 body {
   font-family: 'Mulish', sans-serif, Arial, Helvetica;
   background-color: #f0f0f0;
@@ -30,7 +29,6 @@ body {
   flex-direction: column;
 }
 
-/* Global Link/List Reset */
 a, a:visited, a:active {
   text-decoration: none;
   color: inherit;
@@ -52,7 +50,6 @@ h1 {
   margin: 25px 0 20px;
 }
 
-/* Separator Line Consistency */
 hr {
   margin: 20px 0;
   height: 3px;
@@ -61,7 +58,6 @@ hr {
   width: 100%;
 }
 
-/* Global Notices/Errors */
 .notice {
   color: rgb(183, 3, 3);
   font-weight: bold;
@@ -69,7 +65,6 @@ hr {
   margin-left: 20px;
 }
 
-/* Form Element Styling (Unified) */
 input, textarea, select {
   width: 100%;
   margin: 5px 0 10px;
@@ -85,7 +80,6 @@ label {
   font-weight: 500;
 }
 
-/* Form Validation Feedback */
 input:required:invalid, input:focus:invalid {
   background-color: rgba(255, 135, 155, 0.506);
 }
@@ -111,7 +105,6 @@ input:required:valid {
   background-color: #0099cc;
 }
 
-/* Password Toggle Button */
 #passBtn {
   border: 2px solid #000000a0;
   border-radius: 5px;
@@ -169,7 +162,7 @@ nav li {
 nav a {
   color: white;
   font-weight: bold;
-  padding: 5px 2px; 
+  padding: 5px 0; 
   display: block;
   font-size: 0.9em; 
   white-space: nowrap;
@@ -190,7 +183,6 @@ main {
   flex-grow: 1; 
 }
 
-/* --- Hero Section --- */
 .hero {
   position: relative;
   width: 100%;
@@ -236,7 +228,6 @@ main {
   z-index: auto;
 }
 
-/* --- Upgrades and Reviews --- */
 .upgrades-reviews-container {
   display: flex;
   justify-content: space-between;
@@ -301,7 +292,6 @@ main {
 /* INVENTORY VIEWS (List & Detail)     */
 /* ================================================= */
 
-/* --- CLASSIFICATION GRID --- */
 #inv-display {
   display: grid;
   grid-template-columns: 1fr;
@@ -349,7 +339,6 @@ main {
   margin-top: 5px;
 }
 
-/* --- DETAIL VIEW --- */
 #inventory-detail-container {
   display: grid;
   grid-template-columns: 1fr;
@@ -409,7 +398,6 @@ main {
 /* ACCOUNT & MANAGEMENT FORMS        */
 /* ================================================= */
 
-/* --- Login/Register Forms (Account Form from first code) --- */
 .account-form {
   border: #868484fb 2px solid;
   border-radius: 5px;
@@ -430,7 +418,6 @@ main {
   color: #4ac8e8;
 }
 
-/* --- Classification/Vehicle Add Forms --- */
 .add-classification , .add-inventory {
   padding: 20px;
   width: 90%;
@@ -453,7 +440,6 @@ fieldset {
   margin: 5px 0;
 }
 
-/* --- Management View --- */
 .inv-management h2 {
   margin-bottom: 10px;
 }
@@ -476,14 +462,13 @@ fieldset {
 /* ================================================= */
 
 @media screen and (min-width: 651px) {
-  /* --- General Wrapper/Body --- */
+  
   body {
     background-image: url('../images/site/checkerboard.jpg');
     background-repeat: repeat;
     background-attachment: fixed;
   }
 
-  /* --- Navigation --- */
   nav ul {
     justify-content: center;
   }
@@ -492,7 +477,6 @@ fieldset {
     margin: 0 30px;
   }
 
-  /* --- Home Page Layout --- */
   main.homepage-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -513,19 +497,16 @@ fieldset {
     max-width: 100%;
   }
 
-  /* --- Inventory Grid --- */
   #inv-display {
     grid-template-columns: 1fr 1fr;
     gap: 30px;
   }
 
-  /* --- Inventory Detail --- */
   #inventory-detail-container {
     grid-template-columns: 3fr 2fr;
     gap: 30px;
   }
 
-  /* --- Forms --- */
   .account-form, .add-classification, .add-inventory {
     margin-top: 30px;
   }
@@ -537,7 +518,7 @@ fieldset {
 /* ================================================= */
 
 @media screen and (max-width: 650px) {
-  /* --- Global Resets for Small Screens --- */
+  
   #top-header {
     flex-direction: column;
     align-items: flex-start;
@@ -570,7 +551,6 @@ fieldset {
     padding: 15px;
   }
 
-  /* --- Hero Section --- */
   .overlay {
     position: static;
     transform: none;
@@ -595,7 +575,6 @@ fieldset {
     margin-bottom: 30px;
   }
 
-  /* Stack upgrades on very small screens */
   .upgrades ul {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -606,12 +585,10 @@ fieldset {
     }
   }
 
-  /* --- Forms --- */
   .account-form, .add-classification, .add-inventory {
     max-width: none;
   }
 
-  /* --- Footer --- */
   footer {
     padding: 10px 15px;
     text-align: center;
