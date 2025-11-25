@@ -12,8 +12,13 @@ router.get("/type/:classificationId", utilities.handleErrors(invController.build
 // Route to build single vehicle view
 router.get("/detail/:invId", utilities.handleErrors(invController.buildByInvId));
 
-// Route to build management view
-router.get("/", invController.buildManagementView)
+/* ******************************************
+ * Route to build management view - NOW PROTECTED
+ * *******************************************/
+router.get("/", 
+  utilities.checkLogin, 
+  utilities.handleErrors(invController.buildManagementView)
+)
 
 // New Route to get inventory items for AJAX request (returns JSON)
 router.get(

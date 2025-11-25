@@ -8,10 +8,12 @@
 
 <%- messages() %>
 
+<% if (locals.loggedin && locals.accountData && (locals.accountData.account_type === 'Employee' || locals.accountData.account_type === 'Admin')) { %>
 <p>
     <a href="/inv/add-classification">Add New Classification</a> |
     <a href="/inv/add-inventory">Add New Inventory</a>
 </p>
+<% } %>
 
 <h2>Manage Inventory</h2>
 <p>Select a classification from the list to see the items belonging to the classification.</p>

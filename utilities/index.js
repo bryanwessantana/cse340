@@ -155,7 +155,7 @@ Util.checkJWTToken = (req, res, next) => {
 }
 
 /* ****************************************
- *  Check Login
+ * Check Login - middleware to redirect unauthenticated users
  * ************************************ */
 Util.checkLogin = (req, res, next) => {
  if (res.locals.loggedin) {
@@ -165,5 +165,6 @@ Util.checkLogin = (req, res, next) => {
    return res.redirect("/account/login")
  }
 }
+
 
 module.exports = Util
