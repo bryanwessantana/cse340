@@ -1,6 +1,10 @@
 const invModel = require("../models/inventory-model")
 const Util = {}
 
+// Add required packages at the top
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
+
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
@@ -33,7 +37,7 @@ Util.buildClassificationGrid = async function(data){
     grid = '<ul id="inv-display">'
     data.forEach(vehicle => { 
       grid += '<li>'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
+      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
       + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
       + 'details"><img src="' + vehicle.inv_thumbnail 
       +'" alt="Figure of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
@@ -58,7 +62,7 @@ Util.buildClassificationGrid = async function(data){
 }
 
 /* ***************************
- *  Build HTML for a single vehicle detail
+ *  Build HTML for a single vehicle detail
  * ************************** */
 Util.buildVehicleDetail = function (vehicle) {
   // Format price & miles
@@ -91,7 +95,7 @@ Util.buildVehicleDetail = function (vehicle) {
 }
 
 /* ***************************
- *  Build Classification List
+ *  Build Classification List
  * ************************** */
 Util.buildClassificationList = async function (classification_id = null) {
   let data = await invModel.getClassifications()
@@ -127,5 +131,27 @@ Util.buildClassificationList = async function (classification_id = null) {
 * ************************************ */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
+/* ****************************************
+* Middleware to check token validity
+**************************************** */
+Util.checkJWTToken = (req, res, next) => {
+  if (req.cookies.jwt) {
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      function (err, accountData) {
+        if (err) {
+          req.flash("notice", "Please log in") // Added "notice" for consistency
+          res.clearCookie("jwt")
+          return res.redirect("/account/login")
+        }
+        res.locals.accountData = accountData
+        res.locals.loggedin = 1
+        next()
+      })
+  } else {
+    next()
+  }
+}
 
 module.exports = Util

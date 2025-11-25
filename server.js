@@ -13,10 +13,11 @@ const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
-const utilities = require("./utilities")
+const utilities = require("./utilities") // Already required at the top
 const session = require("express-session")
 const pool = require("./database/")
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
 
 /* ***********************
  * Middleware
@@ -42,6 +43,12 @@ app.use(function(req, res, next){
 // Body Parser Middleware for parsing application/ x-www-form-urlencoded
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+// Cookie Parser Middleware
+app.use(cookieParser())
+
+// Universal JWT Token Check Middleware (NEW)
+app.use(utilities.checkJWTToken)
 
 /* ***********************
  * View Engine and Templates
