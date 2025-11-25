@@ -4,7 +4,7 @@ const utilities = require("../utilities/")
 const invCont = {}
 
 /* ***************************
- *  Build inventory by classification view
+ *  Build inventory by classification view
  * ************************** */
 invCont.buildByClassificationId = async function (req, res, next) {
   const classification_id = req.params.classificationId
@@ -20,7 +20,7 @@ invCont.buildByClassificationId = async function (req, res, next) {
 }
 
 /* ***************************
- *  Build single vehicle view
+ *  Build single vehicle view
  * ************************** */
 invCont.buildByInvId = async function (req, res, next) {
   try {
@@ -57,11 +57,16 @@ invCont.buildByInvId = async function (req, res, next) {
 invCont.buildManagementView = async function (req, res, next) {
   try {
     const nav = await utilities.getNav()
+    
+    // START of added code
+    const classificationSelect = await utilities.buildClassificationList()
+    // END of added code
 
     res.render("inventory/management", {
       title: "Vehicle Management",
       nav,
       notice: req.flash("notice"),
+      classificationSelect, // <-- ADDED to the render object
     })
   } catch (err) {
     next(err)
@@ -69,7 +74,7 @@ invCont.buildManagementView = async function (req, res, next) {
 }
 
 /* ***************************
- *  Build add-classification view
+ *  Build add-classification view
  * ************************** */
 invCont.buildAddClassification = async function (req, res, next) {
   try {
@@ -86,7 +91,7 @@ invCont.buildAddClassification = async function (req, res, next) {
 }
 
 /* ***************************
- *  Insert new classification
+ *  Insert new classification
  * ************************** */
 invCont.addClassification = async function (req, res, next) {
   try {
@@ -96,11 +101,8 @@ invCont.addClassification = async function (req, res, next) {
 
     if (result.rowCount > 0) {
       req.flash("notice", `New ${classification_name} classification added successfully.`)
-      const nav = await utilities.getNav()
-      return res.status(201).render("inventory/management", {
-        title: "Vehicle Management",
-        nav,
-      })
+      // To ensure the nav bar and list update, redirect to the management view
+      return res.redirect("/inv/") 
     } else {
       req.flash("notice", "Provide a correct classification name.")
       const nav = await utilities.getNav()
@@ -117,7 +119,7 @@ invCont.addClassification = async function (req, res, next) {
 }
 
 /* ***************************
- *  Build Add New Vehicle View
+ *  Build Add New Vehicle View
  * ************************** */
 invCont.buildAddVehicle = async function (req, res, next) {
   const nav = await utilities.getNav()
@@ -131,7 +133,7 @@ invCont.buildAddVehicle = async function (req, res, next) {
 }
 
 /* ***************************
- *  Add New Vehicle Into Inventory
+ *  Add New Vehicle Into Inventory
  * ************************** */
 invCont.addInventory = async function (req, res, next) {
   try {
@@ -190,6 +192,21 @@ invCont.addInventory = async function (req, res, next) {
   }
 }
 
+/* ***************************
+ * Return Inventory by Classification As JSON
+ * ************************** */
+invCont.getInventoryJSON = async (req, res, next) => {
+  const classification_id = parseInt(req.params.classification_id)
+  const invData = await invModel.getInventoryByClassificationId(classification_id)
+  
+  if (invData.length > 0) {
+    return res.json(invData)
+  } else {
+    // Note: Returning an empty array is often cleaner for JSON endpoints,
+    // but throwing an error satisfies the requirement if no data is found.
+    next(new Error("No data returned"))
+  }
+}
 
 
 module.exports = invCont

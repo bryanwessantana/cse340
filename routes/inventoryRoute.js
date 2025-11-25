@@ -15,31 +15,37 @@ router.get("/detail/:invId", utilities.handleErrors(invController.buildByInvId))
 // Route to build management view
 router.get("/", invController.buildManagementView)
 
+// New Route to get inventory items for AJAX request (returns JSON)
+router.get(
+    "/getInventory/:classification_id", 
+    utilities.handleErrors(invController.getInventoryJSON)
+)
+
 // Route to add-classification form (GET)
 router.get("/add-classification",
-  utilities.handleErrors(invController.buildAddClassification)
+    utilities.handleErrors(invController.buildAddClassification)
 )
 
 // Route to build add-inventory view
 router.get(
-  "/add-vehicle",
-  utilities.handleErrors(invController.buildAddVehicle)
+    "/add-vehicle",
+    utilities.handleErrors(invController.buildAddVehicle)
 )
 
 // Route to add-classification form submission (POST)
 router.post(
-  "/add-classification",
-  invValidate.classificationRules(),
-  invValidate.checkClassData,
-  utilities.handleErrors(invController.addClassification)
+    "/add-classification",
+    invValidate.classificationRules(),
+    invValidate.checkClassData,
+    utilities.handleErrors(invController.addClassification)
 )
 
 // Route to add vehicle to inventory
 router.post(
-  "/add-vehicle",
-  invValidate.inventoryRules(),
-  invValidate.checkInventoryData,
-  utilities.handleErrors(invController.addInventory)
+    "/add-vehicle",
+    invValidate.inventoryRules(),
+    invValidate.checkInventoryData,
+    utilities.handleErrors(invController.addInventory)
 )
 
 module.exports = router
