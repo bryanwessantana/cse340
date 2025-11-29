@@ -11,19 +11,24 @@ require("dotenv").config()
 Util.getNav = async function (req, res, next) {
   let data = await invModel.getClassifications()
   let list = "<ul>"
-  list += '<li><a href="/" title="Home page">Home</a></li>'
-  data.rows.forEach((row) => {
-    list += "<li>"
-    list +=
-      '<a href="/inv/type/' +
-      row.classification_id +
-      '" title="See our inventory of ' +
-      row.classification_name +
-      ' vehicles">' +
-      row.classification_name +
-      "</a>"
-    list += "</li>"
-  })
+  list += '<li><a href="/" title="Home page">Home</a></a></li>'
+
+  // CRITICAL CHECK ADDED: Ensure data.rows exists before using forEach
+  if (data.rows && data.rows.length > 0) {
+    data.rows.forEach((row) => {
+      list += "<li>"
+      list +=
+        '<a href="/inv/type/' +
+        row.classification_id +
+        '" title="See our inventory of ' +
+        row.classification_name +
+        ' vehicles">' +
+        row.classification_name +
+        "</a>"
+      list += "</li>"
+    })
+  }
+
   list += "</ul>"
   return list
 }
@@ -106,18 +111,21 @@ Util.buildClassificationList = async function (classification_id = null) {
     '<select name="classification_id" id="classificationList" required>'
   classificationList += "<option value=''>Choose a Classification</option>"
 
-  data.rows.forEach((row) => {
-    classificationList += `<option value="${row.classification_id}"`
+  // CRITICAL CHECK ADDED: Ensure data.rows exists before using forEach
+  if (data.rows && data.rows.length > 0) {
+    data.rows.forEach((row) => {
+      classificationList += `<option value="${row.classification_id}"`
 
-    if (
-      classification_id !== null &&
-      row.classification_id == classification_id
-    ) {
-      classificationList += " selected"
-    }
+      if (
+        classification_id !== null &&
+        row.classification_id == classification_id
+      ) {
+        classificationList += " selected"
+      }
 
-    classificationList += `>${row.classification_name}</option>`
-  })
+      classificationList += `>${row.classification_name}</option>`
+    })
+  }
 
   classificationList += "</select>"
 
@@ -166,5 +174,22 @@ Util.checkLogin = (req, res, next) => {
  }
 }
 
+/* ****************************************
+ * Check Account Type
+ * ************************************ */
+Util.checkAccountType = (req, res, next) => {
+  if (res.locals.loggedin) {
+    const account_type = res.locals.accountData.account_type
+    if (account_type == "Employee" || account_type == "Admin") {
+      next()
+    } else {
+      req.flash("notice", "Please log in with appropriate credentials.")
+      return res.redirect("/account/login")
+    }
+  } else {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+}
 
 module.exports = Util

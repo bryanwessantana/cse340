@@ -8,6 +8,29 @@ const utilities = require("../utilities")
 const regValidate = require("../utilities/account-validation")
 
 /* ******************************************
+ * Account Update Routes
+ *******************************************/
+router.get(
+  "/update/:accountId", 
+  utilities.checkLogin, 
+  utilities.handleErrors(accountController.buildUpdateAccount)
+)
+
+router.post(
+  "/update",
+  regValidate.updateAccountRules(),
+  regValidate.checkUpdateData,
+  utilities.handleErrors(accountController.updateAccount)
+)
+
+router.post(
+  "/change-password",
+  regValidate.changePasswordRules(),
+  regValidate.checkPasswordData,
+  utilities.handleErrors(accountController.changePassword)
+)
+
+/* ******************************************
  * Account Management Default View
  *******************************************/
 // Route to deliver the account management view (e.g., /account/)
@@ -48,5 +71,8 @@ router.post(
   regValidate.checkRegData,
   utilities.handleErrors(accountController.registerAccount)
 )
+
+// Route to logout
+router.get("/logout", utilities.handleErrors(accountController.accountLogout))
 
 module.exports = router

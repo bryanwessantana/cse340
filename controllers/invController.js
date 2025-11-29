@@ -11,6 +11,7 @@ invCont.buildByClassificationId = async function (req, res, next) {
   const data = await invModel.getInventoryByClassificationId(classification_id)
   const grid = await utilities.buildClassificationGrid(data)
   let nav = await utilities.getNav()
+  // NOTE: This line can crash if data is empty. Ensure data is checked before accessing index 0.
   const className = data[0].classification_name
   res.render("./inventory/classification", {
     title: className + " vehicles",
@@ -58,15 +59,14 @@ invCont.buildManagementView = async function (req, res, next) {
   try {
     const nav = await utilities.getNav()
     
-    // START of added code
+    // Calls the robust classification list builder
     const classificationSelect = await utilities.buildClassificationList()
-    // END of added code
 
     res.render("inventory/management", {
       title: "Vehicle Management",
       nav,
       notice: req.flash("notice"),
-      classificationSelect, // <-- ADDED to the render object
+      classificationSelect, // Passes list to view
     })
   } catch (err) {
     next(err)
@@ -101,7 +101,6 @@ invCont.addClassification = async function (req, res, next) {
 
     if (result.rowCount > 0) {
       req.flash("notice", `New ${classification_name} classification added successfully.`)
-      // To ensure the nav bar and list update, redirect to the management view
       return res.redirect("/inv/") 
     } else {
       req.flash("notice", "Provide a correct classification name.")
@@ -202,8 +201,6 @@ invCont.getInventoryJSON = async (req, res, next) => {
   if (invData.length > 0) {
     return res.json(invData)
   } else {
-    // Note: Returning an empty array is often cleaner for JSON endpoints,
-    // but throwing an error satisfies the requirement if no data is found.
     next(new Error("No data returned"))
   }
 }

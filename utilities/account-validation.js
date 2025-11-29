@@ -4,36 +4,46 @@ const accountModel = require("../models/account-model")
 const validate = {}
 
 /* **********************************
- * Registration Data Validation Rules
+ * Update Account Data Validation Rules
  * ********************************* */
-validate.registrationRules = () => {
+validate.updateAccountRules = () => {
     return [
-        // firstname is required and must be string
-        body("account_firstname")
-            .trim()
-            .isLength({ min: 1 })
-            .withMessage("Please provide a first name."), // on error this message is sent.
-
-        // lastname is required and must be string
-        body("account_lastname")
-            .trim()
-            .isLength({ min: 2 })
-            .withMessage("Please provide a last name."), // on error this message is sent.
-
-        // valid email is required and cannot already exist in the DB
-        body("account_email")
-            .trim()
-            .isEmail()
-            .normalizeEmail() // refer to validator docs
-            .withMessage("A valid email is required.")
-            .custom(async (account_email) => {
+      body("account_firstname")
+        .trim()
+        .isLength({ min: 1 })
+        .withMessage("Please provide a first name."), 
+  
+      body("account_lastname")
+        .trim()
+        .isLength({ min: 2 })
+        .withMessage("Please provide a last name."),
+  
+      body("account_email")
+        .trim()
+        .isEmail()
+        .normalizeEmail() 
+        .withMessage("A valid email is required.")
+        .custom(async (account_email, { req }) => {
+            // Get the account based on the ID to check if the email matches the current one
+            const account_id = req.body.account_id
+            const account = await accountModel.getAccountById(account_id)
+            
+            // If email is different, check if it exists in DB
+            if (account_email != account.account_email) {
                 const emailExists = await accountModel.checkExistingEmail(account_email)
                 if (emailExists) {
-                    throw new Error("Email exists. Please log in or use a different email.")
+                    throw new Error("Email exists. Please use a different email.")
                 }
-            }),
+            }
+        }),
+    ]
+  }
 
-        // password is required and must meet complexity rules
+/* **********************************
+ * Change Password Validation Rules
+ * ********************************* */
+validate.changePasswordRules = () => {
+    return [
         body("account_password")
             .trim()
             .isLength({ min: 12 })
@@ -44,64 +54,50 @@ validate.registrationRules = () => {
 }
 
 /* ******************************
- * Check data and return errors or continue to registration
+ * Check Update Data
  * ***************************** */
-validate.checkRegData = async (req, res, next) => {
-    const { account_firstname, account_lastname, account_email } = req.body
+validate.checkUpdateData = async (req, res, next) => {
+    const { account_firstname, account_lastname, account_email, account_id } = req.body
     let errors = validationResult(req)
     if (!errors.isEmpty()) {
         let nav = await utilities.getNav()
-        res.render("account/register", {
+        res.render("account/update", {
             errors,
-            title: "Registration",
+            title: "Edit Account",
             nav,
             account_firstname,
             account_lastname,
             account_email,
+            account_id,
         })
         return
     }
     next()
-}
-
-/* **********************************
- * Login Data Validation Rules
- * ********************************* */
-validate.loginRules = () => {
-    return [
-        // valid email is required
-        body("account_email")
-            .trim()
-            .isEmail()
-            .normalizeEmail() 
-            .withMessage("A valid email is required."),
-
-        // password is required
-        body("account_password")
-            .trim()
-            .isLength({ min: 1 }) // Simple check for presence (complexity check is handled by compare)
-            .withMessage("Password field cannot be empty."),
-    ]
 }
 
 /* ******************************
- * Check data and return errors or continue to login
+ * Check Password Data
  * ***************************** */
-validate.checkLoginData = async (req, res, next) => {
-    const { account_email } = req.body
+validate.checkPasswordData = async (req, res, next) => {
+    const { account_id } = req.body
     let errors = validationResult(req)
     if (!errors.isEmpty()) {
         let nav = await utilities.getNav()
-        res.render("account/login", {
+        // We need to re-fetch the account data to populate the other form fields correctly
+        // even though this is the password form error, we render the whole view
+        const accountData = await accountModel.getAccountById(account_id)
+        res.render("account/update", {
             errors,
-            title: "Login",
+            title: "Edit Account",
             nav,
-            account_email,
+            account_firstname: accountData.account_firstname,
+            account_lastname: accountData.account_lastname,
+            account_email: accountData.account_email,
+            account_id,
         })
         return
     }
     next()
 }
-
 
 module.exports = validate
