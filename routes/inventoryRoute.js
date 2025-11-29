@@ -1,4 +1,4 @@
-// Needed Resources 
+// Needed Resources  
 const express = require("express")
 const router = new express.Router() 
 const invController = require("../controllers/invController")
@@ -6,32 +6,38 @@ const utilities = require("../utilities")
 const invValidate = require("../utilities/inv-validation")
 
 // Route to build inventory by classification view (Public)
-router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
+router.get(
+    "/type/:classificationId", 
+    utilities.handleErrors(invController.buildByClassificationId.bind(invController))
+);
 
 // Route to build single vehicle view (Public)
-router.get("/detail/:invId", utilities.handleErrors(invController.buildByInvId));
+router.get(
+    "/detail/:invId", 
+    utilities.handleErrors(invController.buildByInvId.bind(invController))
+);
 
 /* ******************************************
  * Management Routes (Protected)
  * *******************************************/
 router.get("/", 
   utilities.checkLogin, 
-  utilities.checkAccountType, // Added Task 2
+  utilities.checkAccountType,
   utilities.handleErrors(invController.buildManagementView)
 )
 
 // Route to add-classification form (GET)
 router.get("/add-classification",
     utilities.checkLogin,
-    utilities.checkAccountType, // Added Task 2
+    utilities.checkAccountType,
     utilities.handleErrors(invController.buildAddClassification)
 )
 
 // Route to build add-inventory view
 router.get(
-    "/add-vehicle",
+    "/add-inventory-form",
     utilities.checkLogin,
-    utilities.checkAccountType, // Added Task 2
+    utilities.checkAccountType,
     utilities.handleErrors(invController.buildAddVehicle)
 )
 
@@ -39,7 +45,7 @@ router.get(
 router.post(
     "/add-classification",
     utilities.checkLogin,
-    utilities.checkAccountType, // Added Task 2
+    utilities.checkAccountType,
     invValidate.classificationRules(),
     invValidate.checkClassData,
     utilities.handleErrors(invController.addClassification)
@@ -47,9 +53,9 @@ router.post(
 
 // Route to add vehicle to inventory (POST)
 router.post(
-    "/add-vehicle",
+    "/add-inventory-form",
     utilities.checkLogin,
-    utilities.checkAccountType, // Added Task 2
+    utilities.checkAccountType,
     invValidate.inventoryRules(),
     invValidate.checkInventoryData,
     utilities.handleErrors(invController.addInventory)

@@ -1,5 +1,3 @@
-<% layout('layouts/layout') %>
-
 <% if (title) { %>
     <h1><%= title %></h1>
 <% } else {
@@ -11,7 +9,7 @@
 <% if (locals.loggedin && locals.accountData && (locals.accountData.account_type === 'Employee' || locals.accountData.account_type === 'Admin')) { %>
 <p>
     <a href="/inv/add-classification">Add New Classification</a> |
-    <a href="/inv/add-inventory">Add New Inventory</a>
+    <a href="/inv/add-inventory-form">Add New Inventory</a>
 </p>
 <% } %>
 
