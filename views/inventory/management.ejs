@@ -9,7 +9,7 @@
 <% if (locals.loggedin && locals.accountData && (locals.accountData.account_type === 'Employee' || locals.accountData.account_type === 'Admin')) { %>
 <p>
     <a href="/inv/add-classification">Add New Classification</a> |
-    <a href="/inv/add-inventory-form">Add New Inventory</a>
+<a href="/inv/add-inventory-form">Add New Inventory</a>
 </p>
 <% } %>
 
@@ -19,6 +19,19 @@
 <%- classificationSelect %>
 
 <table id="inventoryDisplay"></table>
+
+<h2 style="margin-top: 30px;">Delete Classification</h2>
+<p>
+    **WARNING:** You can only delete classifications that contain no vehicles.
+</p>
+<form id="deleteClassificationForm" action="/inv/delete-classification" method="post">
+    <fieldset>
+        <legend>Select Classification to Delete</legend>
+        <label for="classification_id">Classification</label>
+        <%- classificationSelect %> 
+        <button class="submit" type="submit">Delete Selected Classification</button>
+    </fieldset>
+</form>
 
 <noscript>JavaScript must be enabled to use this page.</noscript>
 

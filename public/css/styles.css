@@ -467,8 +467,6 @@ fieldset {
   main {
     margin: 0; 
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
     padding: var(--margin-section);
   }
 
@@ -523,12 +521,12 @@ fieldset {
   }
 
   .vehicle-detail__image-wrapper {
-    width: 40%;
+    width: 60%;
     margin: 0;
   }
 
   .vehicle-detail__info {
-    width: 60%;
+    width: 40%;
     padding: 0;
   }
 

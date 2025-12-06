@@ -61,4 +61,35 @@ router.post(
     utilities.handleErrors(invController.addInventory)
 )
 
+// Route to get inventory in JSON format
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
+
+/* ******************************************
+ * Inventory Delete Routes (Protected)
+ * *******************************************/
+
+// Route to build delete confirmation view (GET)
+router.get(
+    "/delete/:invId",
+    utilities.checkLogin,
+    utilities.checkAccountType,
+    utilities.handleErrors(invController.buildDeleteView)
+)
+
+// Route to handle inventory deletion (POST)
+router.post(
+    "/delete",
+    utilities.checkLogin,
+    utilities.checkAccountType,
+    utilities.handleErrors(invController.deleteInventory)
+)
+
+// Route to handle classification deletion (POST) (NEW)
+router.post(
+    "/delete-classification",
+    utilities.checkLogin,
+    utilities.checkAccountType,
+    utilities.handleErrors(invController.deleteClassification)
+)
+
 module.exports = router

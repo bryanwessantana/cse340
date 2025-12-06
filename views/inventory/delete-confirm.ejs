@@ -22,7 +22,8 @@
 
       <input 
         type="hidden" 
-        name="inv_id" 
+     
+    name="inv_id" 
         value="<%= inv_id %>">
 
       <label for="inv_make">Make</label>
@@ -36,7 +37,8 @@
       <label for="inv_model">Model</label>
       <input
         type="text"
-        id="inv_model"
+       
+    id="inv_model"
         name="inv_model"
         readonly
         value="<%= inv_model || '' %>">
@@ -47,7 +49,8 @@
         id="inv_price"
         name="inv_price"
         readonly
-        value="<%= inv_price || '' %>">
+        value="<%= inv_price ||
+'' %>">
 
       <label for="inv_year">Year</label>
       <input
@@ -55,7 +58,8 @@
         id="inv_year"
         name="inv_year"
         readonly
-        value="<%= inv_year || '' %>">
+        value="<%= inv_year ||
+'' %>">
 
       <button class="submit" type="submit">Delete Vehicle</button>
     </fieldset>
